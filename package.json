@@ -1,5 +1,5 @@
 {
-	"displayName": "My Awesome Electron App",
+	"displayName": "DeguSec Locker",
 	"name": "my-awesome-electron-app",
 	"description": "Your awesome app description",
 	"version": "2.0.2",
@@ -21,7 +21,8 @@
 		"install:deps": "electron-builder install-app-deps",
 		"make:release": "node ./bin/modules/release/index.js",
 		"release": "electron-builder --publish always",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"lint": "eslint . --ext .ts,.tsx --quiet --fix"
 	},
 	"dependencies": {
 		"electron-router-dom": "^1.0.1",

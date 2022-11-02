@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Container, Heading, Button } from 'renderer/components'
 import { useWindowStore } from 'renderer/store'
@@ -8,42 +8,46 @@ import { useWindowStore } from 'renderer/store'
 const { App } = window
 
 export function MainScreen() {
-  const navigate = useNavigate()
-  const store = useWindowStore().about
+	const navigate = useNavigate()
+	const store = useWindowStore().about
 
-  useEffect(() => {
-    App.sayHelloFromBridge()
+	useEffect(() => {
+		App.sayHelloFromBridge()
 
-    App.whenAboutWindowClose(({ message }) => {
-      console.log(message)
+		App.whenAboutWindowClose(({ message }) => {
+			console.log(message)
 
-      store.setAboutWindowState(false)
-    })
-  }, [])
+			store.setAboutWindowState(false)
+		})
+	}, [])
 
-  function openAboutWindow() {
-    App.createAboutWindow()
-    store.setAboutWindowState(true)
-  }
+	/* function openAboutWindow() {
+		App.createAboutWindow()
+		store.setAboutWindowState(true)
+	} */
 
-  return (
-    <Container>
-      <Heading>Hi, {App.username || 'there'}! 👋</Heading>
+	const test = () => {
+		App.sendData({ some: 'data'});
+	}
 
-      <h2>It's time to build something awesome! ✨</h2>
+	return (
+		<Container>
+			<Heading>Hi, {App.username || 'there'}! 👋</Heading>
 
-      <nav>
-        <Button
-          className={store.isOpen ? 'disabled' : ''}
-          onClick={openAboutWindow}
-        >
-          Open About Window
-        </Button>
+			<h2>It's time to build something awesome! ✨</h2>
 
-        <Button onClick={() => navigate('anotherScreen')}>
-          Go to Another screen
-        </Button>
-      </nav>
-    </Container>
-  )
+			<nav>
+				<Button
+					className={store.isOpen ? 'disabled' : ''}
+					onClick={test}
+				>
+					Open About Window
+				</Button>
+
+				<Button onClick={() => navigate('anotherScreen')}>
+					Go to Another screen
+				</Button>
+			</nav>
+		</Container>
+	)
 }
