@@ -1,4 +1,5 @@
 import { Extra } from "./Extra/Extra.js";
+import { iJSON } from "./iJSON.js";
 
 /**
  * This class stores all of the information for each account.
