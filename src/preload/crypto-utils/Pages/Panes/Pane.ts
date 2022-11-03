@@ -7,58 +7,61 @@ import { $ } from "../../DOM/DOMHelper.js";
  * @todo change the constructor to map buttons. 
  */
 export abstract class Pane {
-    listeners = [] as Function[];
-    paneID : string;
-    paneButton : string;
+	listeners = [] as Array<Function>;
 
-    isSelected = false;
-    isEnabled = true;
+	paneID : string;
 
-    constructor(paneID : string, paneButton : string) {
-        this.paneID = paneID;
-        this.paneButton = paneButton;
-    }
+	paneButton : string;
 
-    /**
+	isSelected = false;
+
+	isEnabled = true;
+
+	constructor(paneID : string, paneButton : string) {
+		this.paneID = paneID;
+		this.paneButton = paneButton;
+	}
+
+	/**
      * This function reconstructs the pane
      * @param 
      */
-    abstract updatePane(data ?: any): void;
+	abstract updatePane(data ?: any): void;
 
-    /**
+	/**
      * Will add listener to list of functions to run when changed. 
      * @param listener function to run when data has changed.
      */
-    addChangeListener(listener: Function): void {
-        this.listeners.push(listener);
-    }
+	addChangeListener(listener: Function): void {
+    	this.listeners.push(listener);
+	}
 
-    getPaneButton() {
-        return $(this.paneButton);
-    }
+	getPaneButton() {
+    	return $(this.paneButton);
+	}
 
-    getPane() {
-        return $(this.paneID);
-    }
+	getPane() {
+    	return $(this.paneID);
+	}
 
-    protected setEnabled(enabled : boolean) {
-        this.isEnabled = enabled;
-        if(enabled) {
-            this.getPaneButton().classList.remove("disabled");
-        } else {
-            this.getPaneButton().classList.add("disabled");
-        }
-    }
+	protected setEnabled(enabled : boolean) {
+    	this.isEnabled = enabled;
+    	if(enabled) {
+    		this.getPaneButton().classList.remove("disabled");
+    	} else {
+    		this.getPaneButton().classList.add("disabled");
+    	}
+	}
 
-    protected setSelected(selected : boolean) {
+	protected setSelected(selected : boolean) {
         
-    }
+	}
 
-    /**
+	/**
      * Notify listeners
      * @param data data to notify listeners with.
      */
-    onChange(data ?: any) {
-        for (let listener = 0; listener < this.listeners.length; listener++) this.listeners[listener](data);
-    }
+	onChange(data ?: any) {
+    	for (let listener = 0; listener < this.listeners.length; listener++) this.listeners[listener](data);
+	}
 }

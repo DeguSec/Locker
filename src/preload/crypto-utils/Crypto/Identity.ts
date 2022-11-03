@@ -1,47 +1,49 @@
-import { log } from "../Functions.js";
 import { Account } from "../Account.js";
+import { log } from "../Functions.js";
 
 /**
  * This class holds and serialises the data used for holding account information.
  * @todo implement {@link Extra}.
  */
 export class Identity implements iJSON {
-  public accounts: Account[];
-  public identityName: string;
-  public identityDesc: string;
+	public accounts: Array<Account>;
 
-  constructor(identityData: any) {
-    let jsonIdentityData = JSON.parse(identityData);
-    log("making accounts");
-    // add accounts
-    this.accounts = [];
-    for (let index = 0; index < jsonIdentityData["accounts"].length; index++) {
-      log(index);
-      let data = JSON.parse(jsonIdentityData["accounts"][index]);
-      log(data);
-      let account = new Account(data);
-      log(account);
-      this.accounts.push(account);
-    }
-    log("all accounts: ")
-    log(this.accounts)
+	public identityName: string;
 
-    // misc
-    this.identityName = jsonIdentityData["identityName"];
-    this.identityDesc = jsonIdentityData["identityDesc"];
-  }
+	public identityDesc: string;
 
-  getJSON() {
-    // gather accounts' JSON
-    let accounts = [] as string[];
-    for (let index = 0; index < this.accounts.length; index++) {
-      accounts.push(this.accounts[index].getJSON());
-    }
+	constructor(identityData: any) {
+		const jsonIdentityData = JSON.parse(identityData);
+		log("making accounts");
+		// add accounts
+		this.accounts = [];
+		for (let index = 0; index < jsonIdentityData.accounts.length; index++) {
+			log(index);
+			const data = JSON.parse(jsonIdentityData.accounts[index]);
+			log(data);
+			const account = new Account(data);
+			log(account);
+			this.accounts.push(account);
+		}
+		log("all accounts: ")
+		log(this.accounts)
 
-    return JSON.stringify({
-      "accounts": accounts,
-      "identityName": this.identityName,
-      "identityDesc": this.identityDesc,
-    });
-  }
+		// misc
+		this.identityName = jsonIdentityData.identityName;
+		this.identityDesc = jsonIdentityData.identityDesc;
+	}
+
+	getJSON() {
+		// gather accounts' JSON
+		const accounts = [] as Array<string>;
+		for (let index = 0; index < this.accounts.length; index++) {
+			accounts.push(this.accounts[index].getJSON());
+		}
+
+		return JSON.stringify({
+			"accounts": accounts,
+			"identityName": this.identityName,
+			"identityDesc": this.identityDesc,
+		});
+	}
 }

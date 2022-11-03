@@ -1,10 +1,12 @@
 /**
  * @todo refactor with Types
  */
-import { log } from "./../Functions.js";
-import { BIP as _BIP } from "./../Recovery/BIP.js";
-const { split, join } = require("shamir");
+import { log } from "../Functions.js";
+import { BIP as _BIP } from "./BIP.js";
+
 const { randomBytes } = require('crypto');
+
+const { split, join } = require("shamir");
 
 /**
  * Generate the shamir scheme using 'shamir'.
@@ -17,8 +19,8 @@ const { randomBytes } = require('crypto');
  * @returns Recovery pieces as an Object array of Uint8Arrays, __starting the count at 1__.
  */
 export function generateScheme(secret: Uint8Array, parts: number, threshold: number) {
-  if (threshold > parts) throw "Scheme will be unrecoverable";
-  return split(randomBytes, parts, threshold, secret);
+	if (threshold > parts) throw "Scheme will be unrecoverable";
+	return split(randomBytes, parts, threshold, secret);
 }
 
 /**
@@ -27,7 +29,7 @@ export function generateScheme(secret: Uint8Array, parts: number, threshold: num
  * @returns UInt8Array of secret
  */
 export function recoverSecret(data: any) {
-  return join(data);
+	return join(data);
 }
 
 /**
@@ -38,16 +40,16 @@ export function recoverSecret(data: any) {
  * @returns shamir chunks
  */
 export function generateBIPs(secret: Uint8Array, parts: number, threshold: number) {
-  let shared = generateScheme(secret, parts, threshold);
-  log(shared);
-  let chunks = [];
-  log("logging loop")
-  for (let i = 1; i <= parts; i++) {
-    log(i);
-    chunks.push(new ShamirChunk(shared[i.toString()], i, parts));
-  }
+	const shared = generateScheme(secret, parts, threshold);
+	log(shared);
+	const chunks = [];
+	log("logging loop")
+	for (let i = 1; i <= parts; i++) {
+		log(i);
+		chunks.push(new ShamirChunk(shared[i.toString()], i, parts));
+	}
 
-  return chunks;
+	return chunks;
 }
 
 /**
@@ -55,16 +57,16 @@ export function generateBIPs(secret: Uint8Array, parts: number, threshold: numbe
  * @param chunks sharmir chunks
  * @returns secret
  */
-export function recoverFromBIPs(chunks: ShamirChunk[]) {
-  let shared = {} as any;
-  for (let i = 0; i < chunks.length; i++) {
-    let chunk = chunks[i];
-    shared[chunk.part.toString()] = chunk.data;
-  }
+export function recoverFromBIPs(chunks: Array<ShamirChunk>) {
+	const shared = {} as any;
+	for (let i = 0; i < chunks.length; i++) {
+		const chunk = chunks[i];
+		shared[chunk.part.toString()] = chunk.data;
+	}
 
-  log(shared);
+	log(shared);
 
-  return recoverSecret(shared);
+	return recoverSecret(shared);
 }
 
 /**
@@ -72,22 +74,25 @@ export function recoverFromBIPs(chunks: ShamirChunk[]) {
  * It contains the part number, the threshold and the data.
  */
 export class ShamirChunk {
-  part: number;
-  threshold?: number;
-  data: Uint8Array;
-  constructor(data: Uint8Array, part: number, threshold?: number) {
-    this.data = data;
-    this.part = part;
-    this.threshold = threshold;
-  }
+	part: number;
 
-  /**
+	threshold?: number;
+
+	data: Uint8Array;
+
+	constructor(data: Uint8Array, part: number, threshold?: number) {
+		this.data = data;
+		this.part = part;
+		this.threshold = threshold;
+	}
+
+	/**
    * Returns a Word representation of the piece of information
    * @param BIP the bip object
    * @returns Word representation of the info.
    */
-  makeBIP(BIP: _BIP) {
-    return BIP.generateFromUint8Array(this.data);
-  }
+	makeBIP(BIP: _BIP) {
+		return BIP.generateFromUint8Array(this.data);
+	}
 }
 
