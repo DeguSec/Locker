@@ -51,7 +51,7 @@ module.exports = {
 			'error',
 		],
 		'@typescript-eslint/no-unused-vars': [
-			'error',
+			'warn',
 		],
 		'@typescript-eslint/no-use-before-define': [
 			'error',
