@@ -4,14 +4,45 @@
 import { log } from "../Functions.js";
 import { BIP as _BIP } from "./BIP.js";
 
+/**
+ * This class is an abstraction of a piece of information in the Shamir Scheme.
+ * It contains the part number, the threshold and the data.
+ */
+export class ShamirChunk {
+	part: number;
+
+	threshold?: number;
+
+	data: Uint8Array;
+
+	constructor(data: Uint8Array, part: number, threshold?: number) {
+		this.data = data;
+		this.part = part;
+		this.threshold = threshold;
+	}
+
+	/**
+   * Returns a Word representation of the piece of information
+   * @param BIP the bip object
+   * @returns Word representation of the info.
+   */
+	makeBIP(BIP: _BIP) {
+		return BIP.generateFromUint8Array(this.data);
+	}
+}
+
+
+// eslint-disable-next-line import/no-unresolved
 const { randomBytes } = require('crypto');
 
+// TODO: Fix this old style import
+// eslint-disable-next-line import/no-unresolved
 const { split, join } = require("shamir");
 
 /**
  * Generate the shamir scheme using 'shamir'.
  * - {@link https://www.npmjs.com/package/shamir npm}.
- * - {@link https://github.com/simbo1905/shamir GitHub}. 
+ * - {@link https://github.com/simbo1905/shamir GitHub}.
  * - {@link https://codyplanteen.com/assets/rs/gf256_prim.pdf GF}.
  * @param secret the secret you want to share
  * @param parts the number of parts you want the scheme to generate
@@ -19,13 +50,13 @@ const { split, join } = require("shamir");
  * @returns Recovery pieces as an Object array of Uint8Arrays, __starting the count at 1__.
  */
 export function generateScheme(secret: Uint8Array, parts: number, threshold: number) {
-	if (threshold > parts) throw "Scheme will be unrecoverable";
+	if (threshold > parts) throw new Error("Scheme will be unrecoverable");
 	return split(randomBytes, parts, threshold, secret);
 }
 
 /**
  * reverses the operation done by {@link generateScheme}.
- * @param data 
+ * @param data
  * @returns UInt8Array of secret
  */
 export function recoverSecret(data: any) {
@@ -68,31 +99,3 @@ export function recoverFromBIPs(chunks: Array<ShamirChunk>) {
 
 	return recoverSecret(shared);
 }
-
-/**
- * This class is an abstraction of a piece of information in the Shamir Scheme. 
- * It contains the part number, the threshold and the data.
- */
-export class ShamirChunk {
-	part: number;
-
-	threshold?: number;
-
-	data: Uint8Array;
-
-	constructor(data: Uint8Array, part: number, threshold?: number) {
-		this.data = data;
-		this.part = part;
-		this.threshold = threshold;
-	}
-
-	/**
-   * Returns a Word representation of the piece of information
-   * @param BIP the bip object
-   * @returns Word representation of the info.
-   */
-	makeBIP(BIP: _BIP) {
-		return BIP.generateFromUint8Array(this.data);
-	}
-}
-
