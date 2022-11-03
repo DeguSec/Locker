@@ -1,5 +1,5 @@
 import { BIPTests } from "./BIPTests.js";
-import { ContainerTests } from "./ContainerTests.js";
+import { ContainerTests } from "./Container/ContainerTests.js";
 import { ExtraTests } from "./ExtraTests.js";
 import { RunTest } from "./RunTest.js";
 import { ShamirTests } from "./ShamirTests.js";
