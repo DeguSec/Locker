@@ -3,7 +3,7 @@ import { Identity } from "../Crypto/Identity.js";
 import { State } from "../CustomTypes.js";
 import { $, $$, $$$, hideLoader, showLoader } from "../DOM/DOMHelper.js";
 import { PaneManager } from "../DOM/PaneManager.js";
-import { BIP } from "../Recovery/BIP.js";
+import { BIP } from "../Recovery/BIP/BIP.js";
 import { CreateContainer } from "./Panes/CreateContainer.js";
 import { HomePane } from "./Panes/HomePane.js";
 import { IdentityPane } from "./Panes/IdentityPane.js";
@@ -84,7 +84,7 @@ function updateState() {
 		}
 		case "password_manager": {
 			removeDisabledFromButtons($$(password_manager_pane_buttons));
-      
+
 		}
 	}
 }
@@ -166,7 +166,7 @@ function containerCreated(container_: Container) {
 }
 
 /**
- * Create all of the panes that don't need the container to be unlocked. 
+ * Create all of the panes that don't need the container to be unlocked.
  */
 function createPanes() {
 	const loginPane = new LoginPane(container);

@@ -1,31 +1,10 @@
-import { getRandomBytes } from "../Crypto/CryptoFunctions.js";
-import { log, compareArrays } from "../Functions.js";
-import { Words1 } from "./WordLists.js";
+import { getRandomBytes } from "../../Crypto/CryptoFunctions";
+import { log, compareArrays } from "../../Functions";
+import { Words1 } from "../WordLists";
+import { Word } from "./Word";
 
 const BITS8 = 2 ** 8;
 const MINLENGTH = 3;
-
-/**
- * A word has text and may be underlined
- */
-export class Word {
-	text: string;
-
-	underlined: boolean
-
-	constructor(text: string, underlined: boolean) {
-		this.text = text;
-		this.underlined = underlined;
-	}
-
-	/**
-   * check if the word is valid
-   * @param bip an instanciated BIP element. Resued to save resources
-   */
-	checkWord(bip: BIP) {
-		return bip.isWordValid(this.text);
-	}
-}
 
 /**
  * The BIP class is responsible for the most basic kind of recovery word => Uint8Array.
@@ -40,10 +19,10 @@ export class BIP {
 
 		// sort from smallest to biggest
 		let basicWords = new Words1().words; // load the words
-		basicWords.sort((a, b) => a.length - b.length);
+		basicWords.sort((a: string, b: string) => a.length - b.length);
 
 		// prune bad words
-		basicWords = basicWords.filter((word) => word.length >= MINLENGTH);
+		basicWords = basicWords.filter((word: string) => word.length >= MINLENGTH);
 		log(basicWords);
 
 		// display stats
@@ -64,8 +43,10 @@ export class BIP {
 			const word = basicWords[wordNumber];
 
 			if (this.wordToNumber.has(word)) {
-				log(`Skipping duplicate word: ${  word}`);
+				log(`Skipping duplicate word: ${word}`);
 				basicWords.splice(wordNumber, 1);
+				// TODO: Fix
+				// eslint-disable-next-line no-continue
 				continue;
 			}
 
@@ -105,24 +86,24 @@ export class BIP {
 			log("Self test fail!");
 			log(randomBytes);
 			log(recoveredBytes);
-			throw "Self test fail";
+			throw new Error("Self test fail");
 		}
 	}
 
 	/**
-   * Generate {@link Word}s from an array. Array length must be divisible by 2. 
+   * Generate {@link Word}s from an array. Array length must be divisible by 2.
    * @param arr the array to convert to words
    * @returns word representation of the array
    */
 	generateFromUint8Array(arr: Uint8Array) {
-		if (arr.length % 2 == 1) throw "array length must be divisible by 2";
+		if (arr.length % 2 === 1) throw new Error("array length must be divisible by 2");
 
 		// iterate array
 		const words = [] as Array<Word>;
 
 		for (let i = 0; i < arr.length; i += 2) {
 			let value = arr[i] * BITS8 + arr[i + 1];
-			const underlined = value % 2 == 1;
+			const underlined = value % 2 === 1;
 			value = Math.floor(value / 2); // get rid of last bit
 			const word = new Word(this.words[value], underlined);
 			words.push(word);
@@ -139,6 +120,7 @@ export class BIP {
 	generateFromWord(currentWord: Word) {
 		let wordValue = this.wordToNumber.get(currentWord.text);
 		if (wordValue == null) {
+			// eslint-disable-next-line no-debugger
 			debugger;
 			throw "BIP: Word value '{}' is null".replace("{}", currentWord.text);
 		}
@@ -151,7 +133,7 @@ export class BIP {
    * generate a UInt8Array from a word array. Useful if you want to make an array human readable. Also reverses {@link BIP.generateFromUint8Array}.
    * @example  generateFromWords(generateFromUint8Array(Uint8Array.from([1, 2, 3, 4]))) => [1, 2, 3, 4]; // As Uint8Array
    * @param arr array of words
-   * @returns a uint8array representation of the words. 
+   * @returns a uint8array representation of the words.
    */
 	generateFromWords(arr: Array<Word>) {
 		const intArr = [] as Array<number>;
@@ -172,6 +154,6 @@ export class BIP {
    * @returns true if the word is in the wordlist
    */
 	isWordValid(word: string) { // crude and wrong.
-		return word.length >= MINLENGTH && this.words.indexOf(word) != -1;
+		return word.length >= MINLENGTH && this.words.indexOf(word) !== -1;
 	}
 }

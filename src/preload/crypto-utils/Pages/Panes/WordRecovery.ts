@@ -3,7 +3,7 @@ import { algorithmBytes } from "../../Crypto/CryptoFunctions.js";
 import { DOMAlert } from "../../DOM/DOMAlert.js";
 import { $, $$$, disableStatus } from "../../DOM/DOMHelper.js";
 import { log } from "../../Functions.js";
-import { BIP, Word } from "../../Recovery/BIP.js";
+import { BIP, Word } from "../../Recovery/BIP/BIP.js";
 import { Pane } from "./Pane.js";
 
 let bip : BIP;
@@ -18,7 +18,7 @@ const textfields = [] as Array<string>;
 export class WordRecovery extends Pane {
 	constructor(container_ : Container, BIP_ : BIP) {
 		super("word_recovery_pane", "word_recovery_button");
-    
+
 		container = container_;
 		bip = BIP_;
 
@@ -65,7 +65,7 @@ export class WordRecovery extends Pane {
 					checkbox.checked = true;
 					textfield.value = textfield.value.replace("*", "");
 				}
-        
+
 				if (bip.isWordValid(textfield.value)) {
 					textfield.classList.add("is-valid");
 					textfield.classList.remove("is-invalid");

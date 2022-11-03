@@ -1,6 +1,6 @@
 import { getRandomBytes } from "../Crypto/CryptoFunctions.js";
 import { compareArrays, log } from "../Functions.js";
-import { BIP } from "../Recovery/BIP.js";
+import { BIP } from "../Recovery/BIP/BIP.js";
 import { RunTest } from "./RunTest.js";
 
 export class BIPTests extends RunTest {

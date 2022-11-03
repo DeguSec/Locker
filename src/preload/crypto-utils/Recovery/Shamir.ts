@@ -2,7 +2,7 @@
  * @todo refactor with Types
  */
 import { log } from "../Functions.js";
-import { BIP as _BIP } from "./BIP.js";
+import { BIP as _BIP } from "./BIP/BIP.js";
 
 /**
  * This class is an abstraction of a piece of information in the Shamir Scheme.

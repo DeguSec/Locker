@@ -1,7 +1,7 @@
 import { Container } from "../../Crypto/Container.js";
 import { removeAllChildren, $ } from "../../DOM/DOMHelper.js";
 import { log } from "../../Functions.js";
-import { BIP } from "../../Recovery/BIP.js";
+import { BIP } from "../../Recovery/BIP/BIP.js";
 import { generateBIPs, ShamirChunk } from "../../Recovery/Shamir.js";
 import { Pane } from "./Pane.js";
 
@@ -64,7 +64,7 @@ function revealBip() {
 			bipElement.classList.add("text-decoration-underline");
 			bipElement.textContent += "*";
 		}
-        
+
 		bip.appendChild(bipElement);
 	}
 
@@ -148,7 +148,7 @@ function updateRecoveryScreen() {
 			bipElement.classList.add("text-decoration-underline");
 			bipElement.textContent += "*";
 		}
-        
+
 		bipDiv.appendChild(bipElement);
 	}
 }

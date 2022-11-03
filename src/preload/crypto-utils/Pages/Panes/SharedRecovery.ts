@@ -3,7 +3,7 @@ import { algorithmBytes } from "../../Crypto/CryptoFunctions.js";
 import { DOMAlert } from "../../DOM/DOMAlert.js";
 import { $, $$, $$$, disableStatus, removeAllChildren } from "../../DOM/DOMHelper.js";
 import { log } from "../../Functions.js";
-import { BIP, Word } from "../../Recovery/BIP.js";
+import { BIP, Word } from "../../Recovery/BIP/BIP.js";
 import { recoverFromBIPs, ShamirChunk } from "../../Recovery/Shamir.js";
 import { Pane } from "./Pane.js";
 
@@ -42,14 +42,14 @@ export class SharedRecovery extends Pane {
 		main: for (let page = 1; page <= numberOfPages; page++) {
 			log(`scanning page: ${  page}`);
 			const missing = pageCheckboxes[page];
-  
+
 			// check if missing
 			if (($(missing) as HTMLInputElement).checked) continue;
-  
+
 			const {textfields} = pageElements[page];
 			const {checkboxes} = pageElements[page];
 			entries.push(page);
-  
+
 			// create words for every element
 			const words = [];
 			for (let i = 0; i < textfields.length; i++) {
@@ -67,21 +67,21 @@ export class SharedRecovery extends Pane {
 				textfield.value = "";
 				checkbox.checked = false;
 			}
-  
+
 			// move created words
 			allWords[page] = words;
 		}
-  
+
 		if (!valid) {
 			// throw gang sign
 			new DOMAlert("warning", "One or more fields are invalid. Check them please.", $("notification_container"));
-  
+
 		} else {
 			log("success");
-  
+
 			// lock everything
 			setAllFieldDisabled(true);
-  
+
 			// make Shamir from words
 			const shamirChunks = [];
 			for (let pageIndex = 0; pageIndex < entries.length; pageIndex++) {
@@ -92,7 +92,7 @@ export class SharedRecovery extends Pane {
 				log(shamirChunk);
 				shamirChunks.push(shamirChunk);
 			}
-  
+
 			const masterKey = recoverFromBIPs(shamirChunks);
 			container.externalUnlock(masterKey).then(() => {
 				setAllFieldDisabled(false);
@@ -102,7 +102,7 @@ export class SharedRecovery extends Pane {
 				new DOMAlert("danger", `Could not open container externally because: ${  error  }.\n\nPlease double check the recovery`, $("notification_container"));
 			});
 		}
-  
+
 	}
 }
 
@@ -150,7 +150,7 @@ function generatePage(into: HTMLElement, pageNumber: Number) {
 				checkbox.checked = true;
 				textfield.value = textfield.value.replace("*", "");
 			}
-      
+
 			if (bip.isWordValid(textfield.value)) {
 				textfield.classList.add("is-valid");
 				textfield.classList.remove("is-invalid");
