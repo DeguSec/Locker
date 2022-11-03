@@ -12,12 +12,12 @@ export type KeyDerivationFunction = "Argon2" | "PBKDF2";
  * Structure of Container.getJSON().
  */
 export type JSONContainerData = {
-    "slots" ?: string[],
-    "encryptedIdentities" ?: string,
-    "encryptedSettings" ?: string,
-    "iv" ?: string,
-    "encryptionType" ?: EncryptionType,
-    "dataHash" ?: string
+	"slots" ?: Array<string>,
+	"encryptedIdentities" ?: string,
+	"encryptedSettings" ?: string,
+	"iv" ?: string,
+	"encryptionType" ?: EncryptionType,
+	"dataHash" ?: string
 }
 
 /**
