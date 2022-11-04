@@ -1,17 +1,8 @@
-class ExtraDataMapped extends Map<string, number> {
-	constructor(data?: Array<Array<string>>) {
-		super();
-		if (data == null) return;
-
-		for (let index = 0; index < data.length; index++) {
-			this.set(data[index][0], index);
-		}
-	}
-}
-
+import { iJSON } from "../iJSON";
+import { ExtraDataMapped } from "./ExtraDataMapped";
 
 /**
- * Extra class 
+ * Extra class
  */
 export class Extra implements iJSON {
 	// Because we want to keep the order of the extra data we need to keep the order.
@@ -36,7 +27,7 @@ export class Extra implements iJSON {
 		if (this.sortedData.has(identifier)) {
 			// has data
 			const index = this.sortedData.get(identifier);
-			if (index == null) throw "index is null when this.sortedData has data?";
+			if (index == null) throw new Error("index is null when this.sortedData has data?");
 
 			this.data[index] = dataObject;
 
@@ -55,12 +46,12 @@ export class Extra implements iJSON {
 	getData(identifier: string) {
 		if (this.sortedData.has(identifier)) {
 			const index = this.sortedData.get(identifier);
-			if (index == null) throw "index is null when this.sortedData has data?";
+			if (index == null) throw new Error("index is null when this.sortedData has data?");
 
 			return this.data[index][1];
 		}
 
-		throw `Data with identifier '${  identifier  }' does not exist`;
+		throw new Error(`Data with identifier '${  identifier  }' does not exist`);
 	}
 
 	/**
