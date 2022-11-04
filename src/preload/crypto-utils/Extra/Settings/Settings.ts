@@ -1,3 +1,4 @@
+import { iJSON } from "../../iJSON.js";
 import { Extra } from "../Extra.js";
 import { PasswordSettings } from "./PasswordSettings.js";
 import { Theme } from "./Theme.js";
