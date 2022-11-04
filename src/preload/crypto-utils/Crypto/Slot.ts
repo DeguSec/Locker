@@ -1,6 +1,7 @@
-import { EncryptionType, KeyDerivationFunction } from "../CustomTypes.js";
-import { compareArrays, convertFromBase64, convertToBase64, log } from "../Functions.js";
-import { getRandomBytes, getKeyHash, hash, encrypt, decrypt, algorithmBytes, algorithmIvBytes } from "./CryptoFunctions.js"; // useful functions
+import { EncryptionType, KeyDerivationFunction } from "../CustomTypes";
+import { compareArrays, convertFromBase64, convertToBase64, log } from "../Functions";
+import { iJSON } from "../iJSON";
+import { getRandomBytes, getKeyHash, hash, encrypt, decrypt, algorithmBytes, algorithmIvBytes } from "./CryptoFunctions"; // useful functions
 
 /**
  * A slot that stores the master key.
@@ -52,7 +53,7 @@ class Slot implements iJSON {
    * @returns the master key of the container
    */
 	async unlock(password: string) {
-		const keyByteSize = this.encryptionType != "Blow" ? 32 : 56;
+		const keyByteSize = this.encryptionType !== "Blow" ? 32 : 56;
 		const key = await getKeyHash(this.keyDerivationFunction, this.rounds, this.salt, keyByteSize, password, this.roundsMemory);
 
 		const masterKey = decrypt(this.encryptionType, key, this.iv, this.encryptedMasterKey);
@@ -64,7 +65,7 @@ class Slot implements iJSON {
 		const keyHash = hash(key)
 		log(keyHash);
 
-		if (!compareArrays(keyHash, dataHash)) throw "Bad key / HMAC missmatch";
+		if (!compareArrays(keyHash, dataHash)) throw new Error("Bad key / HMAC missmatch");
 
 		this.locked = false;
 		this.masterKey = masterKey;
@@ -76,7 +77,7 @@ class Slot implements iJSON {
    * @returns the master key to unlock the container
    */
 	getMasterKey(): Uint8Array {
-		if (this.locked || this.masterKey == null) throw "Slot is locked.";
+		if (this.locked || this.masterKey == null) throw new Error("Slot is locked.");
 		else return this.masterKey;
 	}
 
@@ -99,7 +100,7 @@ class Slot implements iJSON {
    * @param password the new password
    */
 	async changePassword(password: string) {
-		if(this.locked) throw "Slot needs to be open to change password";
+		if(this.locked) throw new Error("Slot needs to be open to change password");
 
 		// Make a new salt
 		const keyByteSize = algorithmBytes(this.encryptionType);
@@ -120,15 +121,22 @@ class Slot implements iJSON {
 
 /**
  * Slot factory / Make a new slot
- * @param encryptionType slot encryption type 
+ * @param encryptionType slot encryption type
  * @param rounds slot time cost
- * @param keyDerivationFunction slot key derivation function  
+ * @param keyDerivationFunction slot key derivation function
  * @param masterKey container master key
  * @param password password to unlock this slot with
  * @param roundsMemory memory cost (Argon 2 only)
  * @returns a new Slot ready to be inserted into a Container
  */
-async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDerivationFunction: KeyDerivationFunction, masterKey: Uint8Array, password: string, roundsMemory: number | null) : Promise<Slot> {
+async function MakeNewSlot(
+	encryptionType: EncryptionType,
+	rounds: number,
+	keyDerivationFunction: KeyDerivationFunction,
+	masterKey: Uint8Array,
+	password: string,
+	roundsMemory: number | null) : Promise<Slot> {
+
 	// Make a salt
 	const keyByteSize = algorithmBytes(encryptionType);
 	const salt = getRandomBytes(keyByteSize);
@@ -137,7 +145,7 @@ async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDe
 	const key = await getKeyHash(keyDerivationFunction, rounds, salt, keyByteSize, password, roundsMemory);
 
 	// make iv
-	const ivSize = encryptionType != "Blow" ? 16 : 8;
+	const ivSize = encryptionType !== "Blow" ? 16 : 8;
 	const iv = getRandomBytes(ivSize);
 
 	// encrypt master key
@@ -150,7 +158,7 @@ async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDe
 	if (!compareArrays(masterKey, decrypt(encryptionType, key, iv, encryptedMasterKey))) {
 		log(masterKey);
 		log(decrypt(encryptionType, key, iv, encryptedMasterKey));
-		throw "Decryption mismatch!";
+		throw new Error("Decryption mismatch!");
 	} else console.log("Decryption works. Good.")
 
 	// make slot data
@@ -170,7 +178,7 @@ async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDe
 	// check slot with bad password
 	await slot.unlock(`${password  }.`).then((decryptedKey: Uint8Array) => { // success
 		if (compareArrays(masterKey, decryptedKey)) {
-			throw "Slot decryption with bad password!";
+			throw new Error("Slot decryption with bad password!");
 		}
 		log("Success should not have been called.");
 	}, (reason: string) => { // fail
@@ -180,7 +188,7 @@ async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDe
 	// check slot actually works
 	await slot.unlock(password).then((decryptedKey: Uint8Array) => {
 		if (!compareArrays(masterKey, decryptedKey)) {
-			throw "Slot decryption mismatch!";
+			throw new Error("Slot decryption mismatch!");
 		}
 		log("Decryption for slot: match. Splendid.");
 		log(masterKey);
@@ -194,7 +202,7 @@ async function MakeNewSlot(encryptionType: EncryptionType, rounds: number, keyDe
 	log(masterKey);
 	log(slot.getMasterKey());
 	log("Unlocked successfully");
-  
+
 	return slot;
 }
 
