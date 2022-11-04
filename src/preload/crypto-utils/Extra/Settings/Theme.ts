@@ -1,4 +1,5 @@
 import { log } from "../../Functions.js";
+import { iJSON } from "../../iJSON.js";
 import { Extra } from "../Extra.js";
 
 /**
@@ -18,7 +19,7 @@ export class Theme extends Extra implements iJSON {
 		this.themeName = this.getDataOrDefaultTo("themeName", "bootstrap");
 
 		// mappings here
-		this.addTheme("bootstrap", "../node_modules/bootstrap/dist/css/bootstrap.min.css", "../css/fixes/bootstrap.css"); 
+		this.addTheme("bootstrap", "../node_modules/bootstrap/dist/css/bootstrap.min.css", "../css/fixes/bootstrap.css");
 		this.addTheme("cyborg", "../node_modules/bootswatch/dist/cyborg/bootstrap.min.css", "../css/fixes/cyborg.css");
 		this.addTheme("darkly", "../node_modules/bootswatch/dist/darkly/bootstrap.min.css", "../css/fixes/darkly.css");
 		this.addTheme("lux", "../node_modules/bootswatch/dist/lux/bootstrap.min.css", "../css/fixes/lux.css");
