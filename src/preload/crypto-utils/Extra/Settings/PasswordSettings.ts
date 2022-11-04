@@ -1,5 +1,6 @@
-import { Extra } from "../Extra.js";
-import { stringToBoolean } from "../ExtraFunctions.js";
+import { iJSON } from "../../iJSON";
+import { Extra } from "../Extra";
+import { stringToBoolean } from "../ExtraFunctions";
 
 /**
  * This class is responsible for storing password generation data.
@@ -17,7 +18,7 @@ export class PasswordSettings extends Extra implements iJSON {
 
 	numbers = "0123456789";
 
-	symbols = "!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~";
+	symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
 	uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -35,7 +36,7 @@ export class PasswordSettings extends Extra implements iJSON {
 
 	constructor(jsonData?: string) {
 		super(jsonData != null ? JSON.parse(jsonData) : undefined);
-		this.passwordLength = Number.parseInt(this.getDataOrDefaultTo("passwordLength", this.defaultPasswordLength.toString()));
+		this.passwordLength = Number.parseInt(this.getDataOrDefaultTo("passwordLength", this.defaultPasswordLength.toString()), 10);
 		this.includeSymbols = stringToBoolean(this.getDataOrDefaultTo("includeSymbols", this.defaultIncludeSymbols.toString()));
 		this.includeNumbers = stringToBoolean(this.getDataOrDefaultTo("includeNumbers", this.defaultIncludeNumbers.toString()));
 		this.includeLowercase = stringToBoolean(this.getDataOrDefaultTo("includeLowercase", this.defaultIncludeLowercase.toString()));
