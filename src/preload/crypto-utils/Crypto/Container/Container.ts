@@ -1,16 +1,17 @@
-import { EncryptionType, JSONContainerData, KeyDerivationFunction } from "../CustomTypes.js";
-import { Settings } from "../Extra/Settings/Settings.js";
-import { log, convertToUint8Array, convertToBase64, convertFromBase64, compareArrays } from "../Functions.js";
-import { encrypt, decrypt, hash, getRandomBytes, algorithmIvBytes } from "./CryptoFunctions.js";
-import { Identity } from "./Identity.js";
-import { MakeNewSlot, Slot } from "./Slot.js";
+import { EncryptionType, JSONContainerData, KeyDerivationFunction } from "../../CustomTypes.js";
+import { Settings } from "../../Extra/Settings/Settings.js";
+import { log, convertToUint8Array, convertToBase64, convertFromBase64, compareArrays } from "../../Functions.js";
+import { iJSON } from "../../iJSON";
+import { encrypt, decrypt, hash, getRandomBytes, algorithmIvBytes } from "../CryptoFunctions.js";
+import { Identity } from "../Identity.js";
+import { MakeNewSlot, Slot } from "../Slot.js";
+import { setStoredContainer } from "./ContainerFunctions";
 
-const storageLocation = "InternetNomad";
 
 /**
- * This class represents all of the data that is going to be stored. 
- * It contains decrypted and encrypted data at any time. Check the functions 
- * for functionality and try to avoid changing variables internally.  
+ * This class represents all of the data that is going to be stored.
+ * It contains decrypted and encrypted data at any time. Check the functions
+ * for functionality and try to avoid changing variables internally.
  */
 export class Container implements iJSON {
 	// external opening
@@ -76,16 +77,16 @@ export class Container implements iJSON {
 	}
 
 	/**
-   * @returns all the {@link Identity}[] if they are decrypted. 
+   * @returns all the {@link Identity}[] if they are decrypted.
    * @throws "Identities are null" if the {@link Identity}[]] are currently not decrypted.
    */
 	getIdentites(): Array<Identity> {
-		if (this.identities == null) throw "Identities are null!";
+		if (this.identities == null) throw new Error("Identities are null!");
 		else return this.identities;
 	}
 
 	/**
-   * Removes all unecrypted data from the container. 
+   * Removes all unecrypted data from the container.
    */
 	lock() {
 		this.update();
@@ -109,7 +110,7 @@ export class Container implements iJSON {
    * Updates all encrypted data with current decrypted data.
    */
 	private update() {
-		if (this.encryptionType == null) throw "Update: Encryption type needed!";
+		if (this.encryptionType == null) throw new Error("Update: Encryption type needed!");
 		const ivSize = algorithmIvBytes(this.encryptionType);
 		this.iv = getRandomBytes(ivSize);
 
@@ -120,7 +121,7 @@ export class Container implements iJSON {
 		this.dataHash = encrypt(this.encryptionType, masterKey, this.iv, hash(masterKey));
 
 		const currentIdentities = this.getIdentites();
-		const identityList = []; // JSON the list, convert the list to Uint8Array, encrypt, convert to base64 
+		const identityList = []; // JSON the list, convert the list to Uint8Array, encrypt, convert to base64
 		for (let identity = 0; identity < currentIdentities.length; identity++) {
 			identityList.push(currentIdentities[identity].getJSON());
 		}
@@ -137,7 +138,7 @@ export class Container implements iJSON {
 		log(this);
 	}
 
-	/** 
+	/**
    * Saves container to storage
    */
 	save() {
@@ -148,25 +149,25 @@ export class Container implements iJSON {
 	}
 
 	/**
-   * This function decrypts all of the encrypted data stored in this container. 
-   * @param key a key to try and unlock the identities with. 
+   * This function decrypts all of the encrypted data stored in this container.
+   * @param key a key to try and unlock the identities with.
    */
 	private async unlockIdentites(key: Uint8Array) {
-		if (this.dataHash == null) throw "No dataHash!";
-		if (this.encryptedIdentities == null) throw "No encrypted identities!";
+		if (this.dataHash == null) throw new Error("No dataHash!");
+		if (this.encryptedIdentities == null) throw new Error("No encrypted identities!");
 
 		log("unlocking identities");
 		log(this.encryptionType);
 		log(key);
 		log(this.iv);
 
-		if (this.encryptionType == null) throw "Cannot decrypt without encryptionType";
-		if (this.iv == null) throw "Cannot decrypt without iv";
+		if (this.encryptionType == null) throw new Error("Cannot decrypt without encryptionType");
+		if (this.iv == null) throw new Error("Cannot decrypt without iv");
 
 		// Test dataHash
 		const decryptedHMAC = decrypt(this.encryptionType, key, this.iv, this.dataHash);
 		const keyHash = hash(key);
-		if (!compareArrays(decryptedHMAC, keyHash)) throw "HMAC Missmatch";
+		if (!compareArrays(decryptedHMAC, keyHash)) throw new Error("HMAC Missmatch");
 
 		// identities
 		log("identities;");
@@ -194,10 +195,10 @@ export class Container implements iJSON {
 
 	/**
    * This function attempts to unlock the container given the password.
-   * It also takes care of decrypting the data if the password is correct. 
-   * @todo Refactor
+   * It also takes care of decrypting the data if the password is correct.
+   * @todo TODO: Refactor
    * @param password The password to attempt to unlock the container with
-   */ 
+   */
 	async unlock(password: string) {
 		if (this.openSlot != null) {
 			log("slot already opened");
@@ -207,29 +208,33 @@ export class Container implements iJSON {
 		}
 		else for (let index = 0; index < this.slots.length; index++) {
 			const slot = this.slots[index];
-			log(`opening slot number ${  index}`);
+			log(`opening slot number ${index}`);
 			log(slot);
 			try {
 				log("unlocking with password '{}'".replace("{}", password));
+				// eslint-disable-next-line no-await-in-loop
 				await slot.unlock(password);
 			} catch (e) {
-				log(`Failed to unlock slot ${  index}`);
+				log(`Failed to unlock slot ${index}`);
 				log(e);
+				// eslint-disable-next-line no-continue
 				continue;
 			}
 
 			log("unlocking identities");
 			this.openSlot = index;
 			try {
+				// eslint-disable-next-line no-await-in-loop
 				await this.unlockIdentites(slot.getMasterKey());
 				return; // success
 			} catch (e) {
 				log(e);
+				// eslint-disable-next-line no-continue
 				continue;
 			}
 		}
 
-		throw "Could not open any container";
+		throw new Error("Could not open any container");
 	}
 
 	/**
@@ -237,7 +242,7 @@ export class Container implements iJSON {
    * @param password the new password
    */
 	async changePassword(password: string) {
-		if (this.openSlot == null) throw "Container needs to be open";
+		if (this.openSlot == null) throw new Error("Container needs to be open");
 		const slot = this.slots[this.openSlot];
 		await slot.changePassword(password);
 	}
@@ -246,7 +251,7 @@ export class Container implements iJSON {
    * This function is used when a password isn't used to unlock the container,
    * in the event of recovery or maybe some other future uses. It also decrypts
    * the container if the key is correct.
-   * @param masterKey the masterkey to unlock to container with. 
+   * @param masterKey the masterkey to unlock to container with.
    */
 	async externalUnlock(masterKey: Uint8Array) {
 		this.externalMasterKey = masterKey;
@@ -264,7 +269,7 @@ export class Container implements iJSON {
 			allSlotsJson.push(this.slots[slot].getJSON());
 		}
 
-		const containerData = new Object() as JSONContainerData;
+		const containerData = {} as JSONContainerData;
 		containerData.slots = allSlotsJson;
 		if (this.encryptedIdentities != null) containerData.encryptedIdentities = this.encryptedIdentities;
 		if (this.iv != null) containerData.iv = convertToBase64(this.iv);
@@ -276,27 +281,28 @@ export class Container implements iJSON {
 	}
 
 	/**
-   * This function removes the specified slot from the slot list. 
+   * This function removes the specified slot from the slot list.
    * This is useful if a user wants to revoke access from a particular slot.
    * @param slot the slot index to remove
    * @todo Make so that no slots need to exist
    */
 	removeSlot(slot: number) {
-		if (this.openSlot == null) throw "No slot is open";
+		if (this.openSlot == null)
+			throw new Error("No slot is open");
 
-		if (this.slots.length == 1) {
+		if (this.slots.length === 1) {
 			const error = "Cannot have less than 1 slot";
 			throw error;
 		}
 
 		if (slot < 0 || slot >= this.slots.length) {
-			const error = `${slot  } is not a valid range for a slot`;
+			const error = `${slot} is not a valid range for a slot`;
 			throw error;
 		}
 
-		if (slot == this.openSlot) {
-			// set the key to be external instead. 
-			const error = `${slot  } is currently used to decrypt the container. Cannot remove.`;
+		if (slot === this.openSlot) {
+			// set the key to be external instead.
+			const error = `${slot} is currently used to decrypt the container. Cannot remove.`;
 			throw error;
 		}
 
@@ -315,12 +321,19 @@ export class Container implements iJSON {
    * @param roundsMemory the memory cost for this {@link Slot}.
    * @param masterKey the master key to unlock this container.
    */
-	async addSlot(password: string, encryptionType?: EncryptionType | null, rounds?: number | null, keyDerivationFunction?: KeyDerivationFunction | null, roundsMemory?: number | null, masterKey?: Uint8Array | null) {
+	async addSlot(
+		password: string,
+		encryptionType?: EncryptionType | null,
+		rounds?: number | null,
+		keyDerivationFunction?: KeyDerivationFunction | null,
+		roundsMemory?: number | null,
+		masterKey?: Uint8Array | null) {
+
 		let copySlot: number | null;
 		if (this.openSlot != null) copySlot = this.openSlot;
 		else copySlot = this.slots.length > 0 ? 0 : null;
 
-		log(`Will be copying data from slot: ${  copySlot}`);
+		log(`Will be copying data from slot: ${copySlot}`);
 		// if there is any data missing, it can be acquired here.
 		if (copySlot != null) {
 			const openSlotObject = this.slots[copySlot];
@@ -332,11 +345,11 @@ export class Container implements iJSON {
 		}
 
 		// if the data is still missing, throw this error:
-		if (encryptionType == null) throw "addSlot: Missing parameters: encryptionType";
-		if (rounds == null) throw "addSlot: Missing parameters: rounds";
-		if (keyDerivationFunction == null) throw "addSlot: Missing parameters: keyDerivationFunction";
-		if (roundsMemory == null) throw "addSlot: Missing parameters: roundsMemory";
-		if (masterKey == null) throw "addSlot: Missing parameters: masterKey";
+		if (encryptionType == null) throw new Error("addSlot: Missing parameters: encryptionType");
+		if (rounds == null) throw new Error("addSlot: Missing parameters: rounds");
+		if (keyDerivationFunction == null) throw new Error("addSlot: Missing parameters: keyDerivationFunction");
+		if (roundsMemory == null) throw new Error("addSlot: Missing parameters: roundsMemory");
+		if (masterKey == null) throw new Error("addSlot: Missing parameters: masterKey");
 
 		const slot = await MakeNewSlot(encryptionType, rounds, keyDerivationFunction, masterKey, password, roundsMemory);
 		this.slots.push(slot);
@@ -352,7 +365,7 @@ export class Container implements iJSON {
    * @param identity identity to add
    */
 	addIdentity(identity: Identity) {
-		if (this.identities == null) throw "Identities are not defined";
+		if (this.identities == null) throw new Error("Identities are not defined");
 		this.identities.push(identity);
 		this.save();
 	}
@@ -362,18 +375,18 @@ export class Container implements iJSON {
    * @param identity index of identity to remove
    */
 	removeIdentity(identity: number) {
-		if (this.identities == null) throw "Identities are not defined";
+		if (this.identities == null) throw new Error("Identities are not defined");
 		this.identities.splice(identity, 1);
 		this.save();
 	}
 
 	/**
-   * 
+   *
    * @returns the masterKey used to encryption and decryption of this container
    */
 	getMasterKey() {
 		if (this.externalMasterKey != null) return this.externalMasterKey;
-		if (this.openSlot == null) throw "No slot is open";
+		if (this.openSlot == null) throw new Error("No slot is open");
 		return this.slots[this.openSlot].getMasterKey();
 	}
 
@@ -383,53 +396,4 @@ export class Container implements iJSON {
 	getSlots() {
 		return this.slots;
 	}
-}
-
-/**
- * Saves container to memory
- * @param container the container to save
- */
-function setStoredContainer(container: Container) {
-	const storage = window.localStorage;
-	if (storage == null) throw "Not running under Electron";
-	const rawData = container.getJSON();
-	log("Putting data");
-	log(rawData);
-
-	storage.setItem(storageLocation, rawData);
-}
-
-/**
- * delete any stored container
- */
-export function deleteContainer() {
-	const storage = window.localStorage;
-	if (storage == null) throw "Not running under Electron";
-	storage.setItem(storageLocation, null as any);
-}
-
-/**
- * check if there is currently a container stored
- * @returns true if there is a container stored here
- */
-export function storageHasContainer(): boolean {
-	const storage = window.localStorage;
-	if (storage == null) throw "Not running under Electron";
-	const rawData = storage.getItem(storageLocation);
-	return rawData != null;
-}
-
-/**
- * returns the currently stored container object
- * @returns a newly initialized container.
- */
-export function getStoredContainer() {
-	const storage = window.localStorage;
-	if (storage == null) throw "Not running under Electron";
-
-	const rawData = storage.getItem(storageLocation);
-	if (rawData == null) throw "Container does not exist!";
-
-	log(rawData);
-	return new Container(rawData);
 }

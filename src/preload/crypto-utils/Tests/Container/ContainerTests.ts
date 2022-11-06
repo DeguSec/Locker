@@ -1,5 +1,5 @@
 import { Account } from "../../Account.js";
-import { Container } from "../../Crypto/Container.js";
+import { Container } from "../../Crypto/Container/Container.js";
 import { hash, encrypt } from "../../Crypto/CryptoFunctions.js";
 import { Identity } from "../../Crypto/Identity.js";
 import { KeyDerivationFunction } from "../../CustomTypes.js";
