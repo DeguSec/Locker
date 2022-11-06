@@ -2,14 +2,14 @@ import React, { PropsWithChildren } from 'react'
 
 import styles from './styles.module.sass'
 
-type Button = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>
+type ButtonProps = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>
 
-export function Button({ children, className, ...restOfProps }: Button) {
-  const combinedClassNames = [styles.button, className].join(' ')
+export function Button({ children, className, ...restOfProps }: ButtonProps) {
+	const combinedClassNames = [styles.button, className].join(' ')
 
-  return (
-    <button className={combinedClassNames} {...restOfProps}>
-      {children}
-    </button>
-  )
+	return (
+		<button type="button" className={combinedClassNames} {...restOfProps}>
+			{children}
+		</button>
+	)
 }

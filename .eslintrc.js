@@ -51,7 +51,7 @@ module.exports = {
 			'error',
 		],
 		'@typescript-eslint/no-unused-vars': [
-			'error',
+			'warn',
 		],
 		'@typescript-eslint/no-use-before-define': [
 			'error',
@@ -84,6 +84,7 @@ module.exports = {
 		'no-shadow': 'off',
 		'no-else-return': 'error',
 		'import/prefer-default-export': 'off',
+		'import/no-extraneous-dependencies': 'off',
 		'arrow-parens': 'off',
 		'import/order': [
 			'error',
@@ -140,6 +141,7 @@ module.exports = {
 				],
 			},
 		],
+		'no-undef': 'off',
 		'no-underscore-dangle': 'off',
 		'react/require-default-props': 'off',
 		'react/jsx-props-no-spreading': 'off',
