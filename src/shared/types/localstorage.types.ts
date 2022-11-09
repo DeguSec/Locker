@@ -5,4 +5,5 @@ export type LocalstorageTheme = {
 export enum Themes {
 	LIGHT,
 	DARK,
+	JASPER_CUSTOM,
 }

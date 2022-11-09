@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react'
 import ReactDom from 'react-dom/client'
 
@@ -9,6 +9,7 @@ import { WindowStoreProvider } from './store'
 
 ReactDom.createRoot(document.querySelector('app') as HTMLElement).render(
 	<ThemeProvider theme={lightThemeStyles}>
+		<CssBaseline />
 		<React.StrictMode>
 			<WindowStoreProvider>
 				<AppRoutes />

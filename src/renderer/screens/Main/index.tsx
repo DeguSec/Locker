@@ -8,6 +8,7 @@ import { darkThemeStyles } from 'renderer/themes/dark';
 import { lightThemeStyles } from 'renderer/themes/light';
 import { LocalstorageTheme, Themes } from 'shared/types/localstorage.types';
 import { loadState, saveState } from 'shared/utils/localstorage';
+import { jasperCustomTheme } from 'renderer/themes/jasperCustom';
 
 // The "App" comes from the context bridge in preload/index.ts
 const { App } = window;
@@ -43,17 +44,31 @@ export function MainScreen() {
 			return lightThemeStyles;
 		}
 
+		let theme: Theme | null;
 		switch (themeState.theme) {
-			case Themes.DARK: return darkThemeStyles;
-			case Themes.LIGHT: return lightThemeStyles;
-			default: return lightThemeStyles;
+			case Themes.DARK:
+				theme = darkThemeStyles;
+				break;
+			//return darkThemeStyles;
+			case Themes.LIGHT:
+				theme = lightThemeStyles;
+				break;
+			//return lightThemeStyles;
+			case Themes.JASPER_CUSTOM:
+				theme = jasperCustomTheme;
+				break;
+			//return jasperCustomTheme;
+			default:
+				theme = lightThemeStyles
+			//return lightThemeStyles;
 		}
+		console.log(theme);
+		return theme;
 	}
 
 	return (
 		<ThemeProvider theme={getTheme}>
-			<CssBaseline />
-			<Box sx={{ display: 'flex' }}>
+			<Box sx={{ display: 'flex', minHeight: '100vh'}}>
 				<Sidebar sidebarWidth={60}/>
 				{/* This is the Pane */}
 				<Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
