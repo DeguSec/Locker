@@ -44,26 +44,12 @@ export function MainScreen() {
 			return lightThemeStyles;
 		}
 
-		let theme: Theme | null;
 		switch (themeState.theme) {
-			case Themes.DARK:
-				theme = darkThemeStyles;
-				break;
-			//return darkThemeStyles;
-			case Themes.LIGHT:
-				theme = lightThemeStyles;
-				break;
-			//return lightThemeStyles;
-			case Themes.JASPER_CUSTOM:
-				theme = jasperCustomTheme;
-				break;
-			//return jasperCustomTheme;
-			default:
-				theme = lightThemeStyles
-			//return lightThemeStyles;
+			case Themes.DARK: return darkThemeStyles;
+			case Themes.LIGHT: return lightThemeStyles;
+			case Themes.JASPER_CUSTOM: return jasperCustomTheme;
+			default: return lightThemeStyles;
 		}
-		console.log(theme);
-		return theme;
 	}
 
 	return (
