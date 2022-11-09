@@ -13,5 +13,5 @@ const appId = `com.${authorInKebabCase}.${name}`.toLowerCase()
  * // => 'com.example.app'
  */
 export function makeAppId(id: string = appId): string {
-  return id
+	return id
 }

@@ -1,40 +1,41 @@
 import { useContext, createContext, useState } from 'react'
 
 export interface WindowStore {
-  about: {
-    isOpen: boolean
-    setAboutWindowState: (value: boolean) => void
-  }
+	about: {
+		isOpen: boolean
+		setAboutWindowState: (value: boolean) => void
+	}
 }
 
 const WindowStoreContext = createContext({} as WindowStore)
 
 export function useWindowStore() {
-  return useContext(WindowStoreContext)
+	return useContext(WindowStoreContext)
 }
 
 export function WindowStoreProvider({
-  children,
+	children,
 }: {
-  children: React.ReactNode
+	children: React.ReactNode
 }) {
-  const [state, setState] = useState({
-    about: { isOpen: false, setAboutWindowState },
-  })
+	const [state, setState] = useState({
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+		about: { isOpen: false, setAboutWindowState },
+	})
 
-  function setAboutWindowState(value: boolean) {
-    setState((state) => ({
-      ...state,
-      about: {
-        ...state.about,
-        isOpen: value,
-      },
-    }))
-  }
+	function setAboutWindowState(value: boolean) {
+		setState((newState) => ({
+			...newState,
+			about: {
+				...newState.about,
+				isOpen: value,
+			},
+		}))
+	}
 
-  return (
-    <WindowStoreContext.Provider value={state}>
-      {children}
-    </WindowStoreContext.Provider>
-  )
+	return (
+		<WindowStoreContext.Provider value={state}>
+			{children}
+		</WindowStoreContext.Provider>
+	)
 }
