@@ -16,3 +16,8 @@ export interface WindowCreationByIPC {
 	window(): BrowserWindowOrNull
 	callback(window: BrowserWindow, event: IpcMainInvokeEvent): void
 }
+
+export enum Panes {
+	LOGIN_PANE,
+	REGISTER_PANE
+}

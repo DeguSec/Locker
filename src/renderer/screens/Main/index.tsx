@@ -1,30 +1,34 @@
-import { Box, CssBaseline, Theme, ThemeProvider, Typography } from '@mui/material';
-import React, { useEffect } from 'react'
+import { Box, Theme, ThemeProvider, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Sidebar } from 'renderer/components';
+import { LoginPane, SetupPane, Sidebar } from 'renderer/components';
 import { useWindowStore } from 'renderer/store'
 import { darkThemeStyles } from 'renderer/themes/dark';
+import { jasperCustomTheme } from 'renderer/themes/jasperCustom';
 import { lightThemeStyles } from 'renderer/themes/light';
+import { Panes } from 'shared/types';
 import { LocalstorageTheme, Themes } from 'shared/types/localstorage.types';
 import { loadState, saveState } from 'shared/utils/localstorage';
-import { jasperCustomTheme } from 'renderer/themes/jasperCustom';
 
 // The "App" comes from the context bridge in preload/index.ts
 const { App } = window;
 
 export function MainScreen() {
-	const navigate = useNavigate()
-	const store = useWindowStore().about
+	const [currentPane, setCurrentPane] = useState<Panes>(Panes.LOGIN_PANE);
+	const navigate = useNavigate();
+	const store = useWindowStore().about;
 
 	useEffect(() => {
-		App.sayHelloFromBridge()
+		App.sayHelloFromBridge();
+
+		App.handlePaneChange((pane) => setCurrentPane(pane));
 
 		App.whenAboutWindowClose(({ message }) => {
 			console.log(message)
 
 			store.setAboutWindowState(false)
-		})
+		});
 	}, [])
 
 	/* function openAboutWindow() {
@@ -58,20 +62,8 @@ export function MainScreen() {
 				<Sidebar sidebarWidth={60}/>
 				{/* This is the Pane */}
 				<Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
-					<Typography paragraph>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-						enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-						imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-						Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-						Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-						adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-						nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-						leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-						feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-						consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-						sapien faucibus et molestie ac.
-					</Typography>
+					{currentPane === Panes.LOGIN_PANE && <LoginPane/>}
+					{currentPane === Panes.REGISTER_PANE && <SetupPane/>}
 				</Box>
 			</Box>
 		</ThemeProvider>

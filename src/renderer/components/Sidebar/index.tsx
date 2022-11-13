@@ -16,9 +16,9 @@ export function Sidebar({ sidebarWidth }: PropsWithChildren<SidebarProps>) {
 				'& .MuiDrawer-paper': {
 					width: sidebarWidth,
 					boxSizing: 'border-box',
-					'flex-wrap': 'nowrap',
+					flexWrap: 'nowrap',
 					overflow: 'hidden',
-					'max-width': sidebarWidth
+					maxWidth: sidebarWidth
 				},
 			}}
 			variant="permanent"
@@ -26,7 +26,7 @@ export function Sidebar({ sidebarWidth }: PropsWithChildren<SidebarProps>) {
 		>
 			<Toolbar />
 			<Divider />
-			<List sx={{ 'max-width': sidebarWidth }}>
+			<List sx={{ maxWidth: sidebarWidth }}>
 				{['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
 					<ListItem key={text} disablePadding>
 						<ListItemButton>
