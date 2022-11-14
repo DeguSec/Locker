@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ipcMain } from 'electron'
+import { ipcMain } from 'electron';
 
-import { registerWindowCreationByIPC } from 'main/factories'
-import { IPC } from 'shared/constants'
+import { registerWindowCreationByIPC } from 'main/factories';
+import { IPC } from 'shared/constants';
 
-import { AboutWindow } from '..'
+import { AboutWindow } from '..';
 
 export function registerAboutWindowCreationByIPC() {
 	registerWindowCreationByIPC({
@@ -12,15 +12,15 @@ export function registerAboutWindowCreationByIPC() {
 		window: AboutWindow,
 
 		callback(window, { sender }) {
-			const channel = IPC.WINDOWS.ABOUT.WHEN_WINDOW_CLOSE
+			const channel = IPC.WINDOWS.ABOUT.WHEN_WINDOW_CLOSE;
 
-			ipcMain.removeHandler(channel)
+			ipcMain.removeHandler(channel);
 
 			window.on('closed', () =>
 				sender.send(channel, {
 					message: 'About window closed!',
 				})
-			)
+			);
 		},
-	})
+	});
 }

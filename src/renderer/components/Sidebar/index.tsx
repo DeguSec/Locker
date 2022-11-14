@@ -22,7 +22,7 @@ export function Sidebar({ sidebarWidth, currentPane }: PropsWithChildren<Sidebar
 		App.changeState({
 			pane
 		});
-	}
+	};
 
 	return (
 		<Drawer

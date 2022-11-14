@@ -141,7 +141,7 @@ export class BIP {
 			const currentWordValue = this.generateFromWord(arr[i]);
 			const firstUint8 = Math.floor(currentWordValue / BITS8);
 			const lastUint8 = currentWordValue - (firstUint8 * BITS8);
-			intArr.push(firstUint8)
+			intArr.push(firstUint8);
 			intArr.push(lastUint8);
 		}
 		return Uint8Array.from(intArr);

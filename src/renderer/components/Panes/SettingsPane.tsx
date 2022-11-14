@@ -38,7 +38,7 @@ export const SettingsPane: React.FC<Params> = ({ currentTheme }): JSX.Element =>
 		App.changeState({
 			theme: newTheme
 		});
-	}
+	};
 
 
 	return (
@@ -67,5 +67,5 @@ export const SettingsPane: React.FC<Params> = ({ currentTheme }): JSX.Element =>
 				</RadioGroup>
 			</FormControl>
 		</>
-	)
-}
+	);
+};

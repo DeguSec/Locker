@@ -9,4 +9,4 @@ export const lightThemeStyles = createTheme({
 			fontSize: '2rem'
 		}
 	}
-})
+});

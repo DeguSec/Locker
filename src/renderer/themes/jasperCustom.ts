@@ -14,4 +14,4 @@ export const jasperCustomTheme = createTheme({
 			secondary: grey[500],
 		},
 	}
-})
+});

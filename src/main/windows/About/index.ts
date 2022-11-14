@@ -1,7 +1,7 @@
-import { createWindow } from 'main/factories'
-import { displayName } from '~/package.json'
+import { createWindow } from 'main/factories';
+import { displayName } from '~/package.json';
 
-export * from './ipcs'
+export * from './ipcs';
 
 export function AboutWindow() {
 	const window = createWindow({
@@ -13,9 +13,9 @@ export function AboutWindow() {
 		resizable: false,
 		alwaysOnTop: true,
 		autoHideMenuBar: true,
-	})
+	});
 
-	window.webContents.on('did-finish-load', () => window.show())
+	window.webContents.on('did-finish-load', () => window.show());
 
-	return window
+	return window;
 }

@@ -1,6 +1,6 @@
-import { Router, Route } from 'electron-router-dom'
+import { Router, Route } from 'electron-router-dom';
 
-import { MainScreen, AboutScreen, AnotherScreen } from 'renderer/screens'
+import { MainScreen, AboutScreen, AnotherScreen } from 'renderer/screens';
 
 export function AppRoutes() {
 	return (
@@ -13,5 +13,5 @@ export function AppRoutes() {
 			}
 			about={<Route path="/" element={<AboutScreen />} />}
 		/>
-	)
+	);
 }

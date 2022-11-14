@@ -12,4 +12,4 @@ export const darkThemeStyles = createTheme({
 			fontSize: '2rem'
 		}
 	}
-})
+});

@@ -1,6 +1,6 @@
-import { Container, Heading } from 'renderer/components'
+import { Container, Heading } from 'renderer/components';
 
-import styles from './styles.module.sass'
+import styles from './styles.module.sass';
 
 export function AboutScreen() {
 	return (
@@ -11,5 +11,5 @@ export function AboutScreen() {
 				Write an awesome text about your app here! ✨
 			</h2>
 		</Container>
-	)
+	);
 }

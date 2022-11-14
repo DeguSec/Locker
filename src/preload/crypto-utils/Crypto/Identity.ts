@@ -25,8 +25,8 @@ export class Identity implements iJSON {
 			log(account);
 			this.accounts.push(account);
 		}
-		log("all accounts: ")
-		log(this.accounts)
+		log("all accounts: ");
+		log(this.accounts);
 
 		// misc
 		this.identityName = jsonIdentityData.identityName;

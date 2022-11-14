@@ -11,4 +11,4 @@ export const IdentityPane: React.FC = (): JSX.Element => (
 			The Pane to be used for switching identities
 		</Typography>
 	</>
-)
+);

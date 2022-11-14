@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { app } from 'electron'
+import { app } from 'electron';
 
 import { registerTestDataCallByIPC } from 'main/windows/Main/ipcs/register-handle-test-data';
 import { registerChangeStateCallByIPC } from 'main/windows/Main/ipcs/registerHandleChangeState';
 
-import { ConfigManager, makeAppSetup, makeAppWithSingleInstanceLock, registerRequestReactByIPC } from './factories'
-import { MainWindow, registerAboutWindowCreationByIPC } from './windows'
+import { ConfigManager, makeAppSetup, makeAppWithSingleInstanceLock, registerRequestReactByIPC } from './factories';
+import { MainWindow, registerAboutWindowCreationByIPC } from './windows';
 
 import BrowserWindow = Electron.BrowserWindow;
 

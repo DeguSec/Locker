@@ -5,4 +5,4 @@ export const IPC = {
 			WHEN_WINDOW_CLOSE: 'windows: when-about-window-close',
 		},
 	},
-}
+};
