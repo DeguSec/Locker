@@ -1,6 +1,6 @@
 {
 	"displayName": "DeguSec Locker",
-	"name": "my-awesome-electron-app",
+	"name": "DeguSec Locker",
 	"description": "Your awesome app description",
 	"version": "2.0.2",
 	"main": "./node_modules/.dev/main/index.js",

@@ -4,21 +4,22 @@ import installExtension, {
 import { app, BrowserWindow } from 'electron'
 
 
+import { ConfigManager } from 'main/factories';
 import { PLATFORM, ENVIRONMENT } from 'shared/constants'
 import { makeAppId } from 'shared/utils'
 
-export async function makeAppSetup(createWindow: () => Promise<BrowserWindow>) {
+export async function makeAppSetup(createWindow: (configManager: ConfigManager) => Promise<BrowserWindow>, configManager: ConfigManager) {
 	if (ENVIRONMENT.IS_DEV) {
 		await installExtension(REACT_DEVELOPER_TOOLS, {
 			forceDownload: false,
 		})
 	}
 
-	let window = await createWindow()
+	let window = await createWindow(configManager)
 
 	app.on('activate', async () =>
 		!BrowserWindow.getAllWindows().length
-			? (window = await createWindow())
+			? (window = await createWindow(configManager))
 			: BrowserWindow.getAllWindows()
 				?.reverse()
 				.forEach((bWindow) => bWindow.restore())

@@ -2,18 +2,20 @@
 import { app } from 'electron'
 
 import { registerTestDataCallByIPC } from 'main/windows/Main/ipcs/register-handle-test-data';
-import { registerChangePaneCallByIPC } from 'main/windows/Main/ipcs/registerHandleChangePane';
+import { registerChangeStateCallByIPC } from 'main/windows/Main/ipcs/registerHandleChangeState';
 
-import { makeAppSetup, makeAppWithSingleInstanceLock } from './factories'
+import { ConfigManager, makeAppSetup, makeAppWithSingleInstanceLock, registerRequestReactByIPC } from './factories'
 import { MainWindow, registerAboutWindowCreationByIPC } from './windows'
 
 import BrowserWindow = Electron.BrowserWindow;
 
 makeAppWithSingleInstanceLock(async () => {
+	const configManager: ConfigManager = new ConfigManager();
 	await app.whenReady();
-	const win: BrowserWindow = await makeAppSetup(MainWindow);
+	const win: BrowserWindow = await makeAppSetup(MainWindow, configManager);
 
 	registerAboutWindowCreationByIPC();
 	registerTestDataCallByIPC();
-	registerChangePaneCallByIPC(win);
+	registerChangeStateCallByIPC(win, configManager);
+	registerRequestReactByIPC(win, configManager);
 });

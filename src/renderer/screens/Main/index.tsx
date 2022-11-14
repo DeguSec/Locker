@@ -1,35 +1,87 @@
-import { Box, Theme, ThemeProvider, Typography } from '@mui/material';
+import { Box, Theme, ThemeProvider } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { LoginPane, SetupPane, Sidebar } from 'renderer/components';
+import { HomePane, IdentityPane, LoginPane, RecoveryPane, SettingsPane, SetupPane, Sidebar } from 'renderer/components';
 import { useWindowStore } from 'renderer/store'
 import { darkThemeStyles } from 'renderer/themes/dark';
 import { jasperCustomTheme } from 'renderer/themes/jasperCustom';
 import { lightThemeStyles } from 'renderer/themes/light';
-import { Panes } from 'shared/types';
-import { LocalstorageTheme, Themes } from 'shared/types/localstorage.types';
-import { loadState, saveState } from 'shared/utils/localstorage';
+import { Panes, ReactState, Themes } from 'shared/types';
 
 // The "App" comes from the context bridge in preload/index.ts
 const { App } = window;
 
 export function MainScreen() {
-	const [currentPane, setCurrentPane] = useState<Panes>(Panes.LOGIN_PANE);
+	const [currentPane, setCurrentPane] = useState<Panes>(Panes.NONE);
+	const [systemThemeDark, setSystemThemeDark] = useState<boolean>(window.matchMedia("(prefers-color-scheme: dark)").matches);
+	const [currentTheme, setCurrentTheme] = useState<Themes>(Themes.SYSTEM);
+	const [themeData, setThemeData] = useState<Theme>();
 	const navigate = useNavigate();
 	const store = useWindowStore().about;
 
 	useEffect(() => {
 		App.sayHelloFromBridge();
 
-		App.handlePaneChange((pane) => setCurrentPane(pane));
+		App.requestState();
 
-		App.whenAboutWindowClose(({ message }) => {
-			console.log(message)
-
+		App.whenAboutWindowClose(() => {
 			store.setAboutWindowState(false)
 		});
-	}, [])
+
+		return () => {
+			App.removeIpcListeners();
+		}
+	}, []);
+
+	useEffect(() => {
+		App.handleStateChange((newState: ReactState) => {
+			if(newState.pane && newState.pane !== currentPane) setCurrentPane(newState.pane);
+			if(newState.theme && newState.theme !== currentTheme) setCurrentTheme(newState.theme);
+		});
+		return () => {
+			App.removeIpcListeners();
+		}
+	}, [currentTheme, currentPane]);
+
+
+	const mqListener = ((e: { matches: boolean; }) => {
+		setSystemThemeDark(e.matches);
+	});
+
+	const toggleSystemThemeStyles = () => {
+		if(currentTheme !== Themes.SYSTEM) return;
+		setThemeData(systemThemeDark ? darkThemeStyles : lightThemeStyles);
+	}
+
+	useEffect(() => toggleSystemThemeStyles(), [systemThemeDark]);
+
+
+	useEffect(() => {
+		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+		darkThemeMq.addEventListener('change', mqListener);
+
+		switch (currentTheme) {
+			case Themes.SYSTEM:
+				toggleSystemThemeStyles();
+				break;
+			case Themes.DARK:
+				setThemeData(darkThemeStyles);
+				break;
+			case Themes.LIGHT:
+				setThemeData(lightThemeStyles);
+				break;
+			case Themes.JASPER_CUSTOM:
+				setThemeData(jasperCustomTheme);
+				break;
+			default:
+				toggleSystemThemeStyles();
+				break;
+		}
+
+		return () => darkThemeMq.removeEventListener('change', mqListener);
+	}, [currentTheme]);
+
 
 	/* function openAboutWindow() {
 		App.createAboutWindow()
@@ -40,30 +92,20 @@ export function MainScreen() {
 		App.sendData({ some: 'data'});
 	}
 
-	// TODO: Improve upon this in time
-	const getTheme = (): Theme => {
-		const themeState: LocalstorageTheme | undefined = loadState<LocalstorageTheme>('locker:theme');
-		if(!themeState) {
-			saveState({ theme: Themes.LIGHT } as LocalstorageTheme, 'locker:theme')
-			return lightThemeStyles;
-		}
-
-		switch (themeState.theme) {
-			case Themes.DARK: return darkThemeStyles;
-			case Themes.LIGHT: return lightThemeStyles;
-			case Themes.JASPER_CUSTOM: return jasperCustomTheme;
-			default: return lightThemeStyles;
-		}
-	}
-
 	return (
-		<ThemeProvider theme={getTheme}>
+		<ThemeProvider theme={themeData ?? lightThemeStyles}>
 			<Box sx={{ display: 'flex', minHeight: '100vh'}}>
-				<Sidebar sidebarWidth={60}/>
+				{(currentPane !== Panes.SETUP_PANE && currentPane !== Panes.LOGIN_PANE) &&
+					<Sidebar sidebarWidth={60} currentPane={currentPane}/>
+				}
 				{/* This is the Pane */}
 				<Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
 					{currentPane === Panes.LOGIN_PANE && <LoginPane/>}
-					{currentPane === Panes.REGISTER_PANE && <SetupPane/>}
+					{currentPane === Panes.SETUP_PANE && <SetupPane/>}
+					{currentPane === Panes.HOME_PANE && <HomePane/>}
+					{currentPane === Panes.IDENTITY_PANE && <IdentityPane/>}
+					{currentPane === Panes.SETTINGS_PANE && <SettingsPane currentTheme={currentTheme}/>}
+					{currentPane === Panes.RECOVERY_PANE && <RecoveryPane/>}
 				</Box>
 			</Box>
 		</ThemeProvider>
