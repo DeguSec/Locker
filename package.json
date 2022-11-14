@@ -1,6 +1,6 @@
 {
 	"displayName": "DeguSec Locker",
-	"name": "my-awesome-electron-app",
+	"name": "degusec-locker",
 	"description": "Your awesome app description",
 	"version": "2.0.2",
 	"main": "./node_modules/.dev/main/index.js",
@@ -25,6 +25,10 @@
 		"lint": "eslint . --ext .ts,.tsx --quiet --fix"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.10.5",
+		"@emotion/styled": "^11.10.5",
+		"@mui/icons-material": "^5.10.9",
+		"@mui/material": "^5.10.13",
 		"aes-js": "^3.1.2",
 		"argon2": "^0.30.1",
 		"egoroof-blowfish": "^2.2.2",
