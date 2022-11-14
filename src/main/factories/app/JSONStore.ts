@@ -13,7 +13,7 @@ function parseDataFile<T>(filePath: string, defaults: T) {
 	}
 }
 
-export const configFolder = path.join(app.getPath('userData'), `configs/`);
+export const configFolder = path.join(app.getPath('appData'), `DeguSec Locker/configs/`);
 
 export class JSONStore<T> {
 	private readonly configName: string;

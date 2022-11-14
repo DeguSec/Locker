@@ -27,10 +27,10 @@ export class ConfigManager {
 		}
 	}
 
-	public getConfigData<T>(configName: string): T {
+	public getConfigData<T>(configName: string, configDefaults?: T): T {
 		const config: JSONStore<T> | undefined = this.configFiles.get(configName);
 		if(!config) {
-			const fetchedConfig: JSONStore<any> = new JSONStore<any>(configName, {});
+			const fetchedConfig: JSONStore<any> = new JSONStore<any>(configName, configDefaults ?? {});
 			this.configFiles.set(configName, fetchedConfig);
 			return fetchedConfig.getData() as T;
 		}

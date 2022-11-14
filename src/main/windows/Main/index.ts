@@ -5,7 +5,7 @@ import { BrowserWindow } from 'electron'
 
 import { ConfigFiles, ConfigManager, createWindow } from 'main/factories'
 import { ENVIRONMENT } from 'shared/constants'
-import { Panes, ReactState } from 'shared/types';
+import { Panes, ReactState, Themes } from 'shared/types';
 import { displayName } from '~/package.json'
 
 export async function MainWindow(configManager: ConfigManager) {
@@ -37,7 +37,7 @@ export async function MainWindow(configManager: ConfigManager) {
 		try {
 			// This must use the spread operator else it will save the pane to be opened
 			const reactState = {
-				...configManager.getConfigData<ReactState>(ConfigFiles.REACT_STATE)
+				...configManager.getConfigData<ReactState>(ConfigFiles.REACT_STATE, { theme: Themes.SYSTEM })
 			};
 			// TODO: Either load login pane or setup pane if container is setup has to be done like below else it will cause the file to save the pane
 			reactState.pane = Panes.SETUP_PANE;
@@ -51,7 +51,7 @@ export async function MainWindow(configManager: ConfigManager) {
 
 	window.webContents.on('devtools-reload-page', () => {
 		try {
-			window.webContents.send('newState', configManager.getConfigData<ReactState>(ConfigFiles.REACT_STATE));
+			window.webContents.send('newState', configManager.getConfigData<ReactState>(ConfigFiles.REACT_STATE, { theme: Themes.SYSTEM }));
 		} catch(err) {
 			console.error(`[DeguSec Locker] An error occurred when sending initial react config state to render proc...`);
 		}

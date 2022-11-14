@@ -1,6 +1,6 @@
 {
 	"displayName": "DeguSec Locker",
-	"name": "DeguSec Locker",
+	"name": "degusec-locker",
 	"description": "Your awesome app description",
 	"version": "2.0.2",
 	"main": "./node_modules/.dev/main/index.js",

@@ -8,8 +8,11 @@ import BrowserWindow = Electron.BrowserWindow;
 
 
 function handleConfigData(state: ReactState, configManager: ConfigManager): ReactState {
+	const defaults: ReactState = {};
+	if(state.theme) defaults.theme = state.theme;
+
 	try {
-		const configData: ReactState = configManager.getConfigData<ReactState>('reactPreferences');
+		const configData: ReactState = configManager.getConfigData<ReactState>('reactPreferences', defaults);
 		// Add more to if conditional as the React sate expands what it needs to save
 		if(!state.theme) return configData;
 
