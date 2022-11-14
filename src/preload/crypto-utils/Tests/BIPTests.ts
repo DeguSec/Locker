@@ -27,7 +27,7 @@ export class BIPTests extends RunTest {
 				const data = getRandomBytes(255);
 				try {
 					const bipData = bip.generateFromUint8Array(data);
-					bip.generateFromWords(bipData)
+					bip.generateFromWords(bipData);
 					return false;
 				} catch (e) {
 					return true;

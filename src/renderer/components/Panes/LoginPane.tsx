@@ -11,7 +11,7 @@ export const LoginPane: React.FC = (): JSX.Element => {
 		App.changeState({
 			pane: Panes.SETUP_PANE
 		});
-	}
+	};
 
 	return (
 		<>
@@ -21,5 +21,5 @@ export const LoginPane: React.FC = (): JSX.Element => {
 				The Main Pane that load first where they would enter the password to their container.
 			</Typography>
 		</>
-	)
-}
+	);
+};

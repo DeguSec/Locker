@@ -188,7 +188,7 @@ export class Container implements iJSON {
 		if (this.encryptedSettings != null) {
 			const settingsArray = decrypt(this.encryptionType, key, this.iv, convertFromBase64(this.encryptedSettings));
 			this.settings = new Settings(Buffer.from(settingsArray).toString("utf-8"));
-			log("decrypted settings: ")
+			log("decrypted settings: ");
 			log(this.settings);
 		}
 	}

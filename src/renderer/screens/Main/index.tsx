@@ -1,9 +1,9 @@
 import { Box, Theme, ThemeProvider } from '@mui/material';
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { HomePane, IdentityPane, LoginPane, RecoveryPane, SettingsPane, SetupPane, Sidebar } from 'renderer/components';
-import { useWindowStore } from 'renderer/store'
+import { useWindowStore } from 'renderer/store';
 import { darkThemeStyles } from 'renderer/themes/dark';
 import { jasperCustomTheme } from 'renderer/themes/jasperCustom';
 import { lightThemeStyles } from 'renderer/themes/light';
@@ -26,12 +26,12 @@ export function MainScreen() {
 		App.requestState();
 
 		App.whenAboutWindowClose(() => {
-			store.setAboutWindowState(false)
+			store.setAboutWindowState(false);
 		});
 
 		return () => {
 			App.removeIpcListeners();
-		}
+		};
 	}, []);
 
 	useEffect(() => {
@@ -41,7 +41,7 @@ export function MainScreen() {
 		});
 		return () => {
 			App.removeIpcListeners();
-		}
+		};
 	}, [currentTheme, currentPane]);
 
 
@@ -52,7 +52,7 @@ export function MainScreen() {
 	const toggleSystemThemeStyles = () => {
 		if(currentTheme !== Themes.SYSTEM) return;
 		setThemeData(systemThemeDark ? darkThemeStyles : lightThemeStyles);
-	}
+	};
 
 	useEffect(() => toggleSystemThemeStyles(), [systemThemeDark]);
 
@@ -90,7 +90,7 @@ export function MainScreen() {
 
 	const test = () => {
 		App.sendData({ some: 'data'});
-	}
+	};
 
 	return (
 		<ThemeProvider theme={themeData ?? lightThemeStyles}>
@@ -109,5 +109,5 @@ export function MainScreen() {
 				</Box>
 			</Box>
 		</ThemeProvider>
-	)
+	);
 }

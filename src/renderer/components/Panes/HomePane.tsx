@@ -11,4 +11,4 @@ export const HomePane: React.FC = (): JSX.Element => (
 			The Main Pane after login to a container.
 		</Typography>
 	</>
-)
+);

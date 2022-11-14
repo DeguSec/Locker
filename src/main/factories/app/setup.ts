@@ -1,21 +1,21 @@
 import installExtension, {
 	REACT_DEVELOPER_TOOLS,
-} from '@daltonmenezes/electron-devtools-installer'
-import { app, BrowserWindow } from 'electron'
+} from '@daltonmenezes/electron-devtools-installer';
+import { app, BrowserWindow } from 'electron';
 
 
 import { ConfigManager } from 'main/factories';
-import { PLATFORM, ENVIRONMENT } from 'shared/constants'
-import { makeAppId } from 'shared/utils'
+import { PLATFORM, ENVIRONMENT } from 'shared/constants';
+import { makeAppId } from 'shared/utils';
 
 export async function makeAppSetup(createWindow: (configManager: ConfigManager) => Promise<BrowserWindow>, configManager: ConfigManager) {
 	if (ENVIRONMENT.IS_DEV) {
 		await installExtension(REACT_DEVELOPER_TOOLS, {
 			forceDownload: false,
-		})
+		});
 	}
 
-	let window = await createWindow(configManager)
+	let window = await createWindow(configManager);
 
 	app.on('activate', async () =>
 		!BrowserWindow.getAllWindows().length
@@ -23,21 +23,21 @@ export async function makeAppSetup(createWindow: (configManager: ConfigManager) 
 			: BrowserWindow.getAllWindows()
 				?.reverse()
 				.forEach((bWindow) => bWindow.restore())
-	)
+	);
 
 	app.on('web-contents-created', (_, contents) =>
 		contents.on(
 			'will-navigate',
 			(event) => !ENVIRONMENT.IS_DEV && event.preventDefault()
 		)
-	)
+	);
 
-	app.on('window-all-closed', () => !PLATFORM.IS_MAC && app.quit())
+	app.on('window-all-closed', () => !PLATFORM.IS_MAC && app.quit());
 
-	return window
+	return window;
 }
 
-if(PLATFORM.IS_LINUX) app.disableHardwareAcceleration()
-else if(PLATFORM.IS_WINDOWS) app.setAppUserModelId(ENVIRONMENT.IS_DEV ? process.execPath : makeAppId())
+if(PLATFORM.IS_LINUX) app.disableHardwareAcceleration();
+else if(PLATFORM.IS_WINDOWS) app.setAppUserModelId(ENVIRONMENT.IS_DEV ? process.execPath : makeAppId());
 
-app.commandLine.appendSwitch('force-color-profile', 'srgb')
+app.commandLine.appendSwitch('force-color-profile', 'srgb');

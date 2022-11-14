@@ -1,1 +1,1 @@
-export * from './register-window-creation'
+export * from './register-window-creation';

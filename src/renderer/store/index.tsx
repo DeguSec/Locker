@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from 'react'
+import { useContext, createContext, useState } from 'react';
 
 export interface WindowStore {
 	about: {
@@ -7,10 +7,10 @@ export interface WindowStore {
 	}
 }
 
-const WindowStoreContext = createContext({} as WindowStore)
+const WindowStoreContext = createContext({} as WindowStore);
 
 export function useWindowStore() {
-	return useContext(WindowStoreContext)
+	return useContext(WindowStoreContext);
 }
 
 export function WindowStoreProvider({
@@ -21,7 +21,7 @@ export function WindowStoreProvider({
 	const [state, setState] = useState({
 		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		about: { isOpen: false, setAboutWindowState },
-	})
+	});
 
 	function setAboutWindowState(value: boolean) {
 		setState((newState) => ({
@@ -30,12 +30,12 @@ export function WindowStoreProvider({
 				...newState.about,
 				isOpen: value,
 			},
-		}))
+		}));
 	}
 
 	return (
 		<WindowStoreContext.Provider value={state}>
 			{children}
 		</WindowStoreContext.Provider>
-	)
+	);
 }

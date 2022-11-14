@@ -266,7 +266,7 @@ export class ContainerTests extends RunTest {
 
 				await container.unlock(slotData[4].password);
 
-				const containerJSON = container.getJSON()
+				const containerJSON = container.getJSON();
 				log(containerJSON);
 				log(containerJSON.length);
 

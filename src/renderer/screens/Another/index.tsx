@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
-import { Container, Heading, Button } from 'renderer/components'
+import { Container, Heading, Button } from 'renderer/components';
 
 export function AnotherScreen() {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	return (
 		<Container>
@@ -13,5 +13,5 @@ export function AnotherScreen() {
 
 			<Button onClick={() => navigate('/')}>Go back to Main screen</Button>
 		</Container>
-	)
+	);
 }

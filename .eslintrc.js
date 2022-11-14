@@ -35,6 +35,7 @@ module.exports = {
 	],
 	ignorePatterns: ["**/redux/**"],
 	rules: {
+		'semi': [2, 'always'],
 		'@typescript-eslint/array-type': [
 			'error',
 			{

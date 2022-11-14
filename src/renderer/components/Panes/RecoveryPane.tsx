@@ -11,4 +11,4 @@ export const RecoveryPane: React.FC = (): JSX.Element => (
 			The Pane to be used for container recovery related things
 		</Typography>
 	</>
-)
+);

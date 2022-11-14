@@ -62,7 +62,7 @@ class Slot implements iJSON {
 		log(masterKey);
 		log(dataHash);
 
-		const keyHash = hash(key)
+		const keyHash = hash(key);
 		log(keyHash);
 
 		if (!compareArrays(keyHash, dataHash)) throw new Error("Bad key / HMAC missmatch");
@@ -91,7 +91,7 @@ class Slot implements iJSON {
 			"salt": convertToBase64(this.salt),
 			"iv": convertToBase64(this.iv),
 			"dataHash": convertToBase64(this.dataHash),
-		}
+		};
 		return JSON.stringify(data);
 	}
 
@@ -159,7 +159,7 @@ async function MakeNewSlot(
 		log(masterKey);
 		log(decrypt(encryptionType, key, iv, encryptedMasterKey));
 		throw new Error("Decryption mismatch!");
-	} else console.log("Decryption works. Good.")
+	} else console.log("Decryption works. Good.");
 
 	// make slot data
 	const slotData = JSON.stringify({

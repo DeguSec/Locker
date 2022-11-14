@@ -1,12 +1,12 @@
-import { join } from 'path'
+import { join } from 'path';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { BrowserWindow } from 'electron'
+import { BrowserWindow } from 'electron';
 
-import { ConfigFiles, ConfigManager, createWindow } from 'main/factories'
-import { ENVIRONMENT } from 'shared/constants'
+import { ConfigFiles, ConfigManager, createWindow } from 'main/factories';
+import { ENVIRONMENT } from 'shared/constants';
 import { Panes, ReactState, Themes } from 'shared/types';
-import { displayName } from '~/package.json'
+import { displayName } from '~/package.json';
 
 export async function MainWindow(configManager: ConfigManager) {
 	const window = createWindow({

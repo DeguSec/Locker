@@ -6,7 +6,7 @@ import { BIP } from "./BIP";
 export class Word {
 	text: string;
 
-	underlined: boolean
+	underlined: boolean;
 
 	constructor(text: string, underlined: boolean) {
 		this.text = text;

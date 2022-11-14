@@ -48,7 +48,7 @@ export async function hashArgon2(memory: number, iterations: number, salt: any, 
 		salt,
 		hashLength: keySize,
 		raw: true,
-	}
+	};
 
 	// TODO: FIX
 	return await Argon2(password, optionals) as Uint8Array;

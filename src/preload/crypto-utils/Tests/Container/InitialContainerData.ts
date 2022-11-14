@@ -15,7 +15,7 @@ export class InitialContainerData {
 
 	containerIv: Uint8Array;
 
-	defaultIdentity: Identity
+	defaultIdentity: Identity;
 
 	constructor(algorithm: EncryptionType, defaultIdentity?: Identity, masterKey?: Uint8Array, containerIV?: Uint8Array) {
 		this.algorithm = algorithm;

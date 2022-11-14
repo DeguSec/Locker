@@ -123,6 +123,6 @@ export class ShamirTests extends RunTest {
 
 				return passed;
 			}
-		]
+		];
 	}
 }

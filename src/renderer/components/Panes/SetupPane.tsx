@@ -8,8 +8,8 @@ const { App } = window;
 
 export const SetupPane: React.FC = (): JSX.Element => {
 	const devBypassPane = () => {
-		App.changeState({ pane: Panes.HOME_PANE })
-	}
+		App.changeState({ pane: Panes.HOME_PANE });
+	};
 
 	return (
 		<>
@@ -19,5 +19,5 @@ export const SetupPane: React.FC = (): JSX.Element => {
 				The pane to be used for first time load that will be used to setup a container
 			</Typography>
 		</>
-	)
-}
+	);
+};

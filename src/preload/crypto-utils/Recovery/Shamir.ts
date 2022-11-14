@@ -74,7 +74,7 @@ export function generateBIPs(secret: Uint8Array, parts: number, threshold: numbe
 	const shared = generateScheme(secret, parts, threshold);
 	log(shared);
 	const chunks = [];
-	log("logging loop")
+	log("logging loop");
 	for (let i = 1; i <= parts; i++) {
 		log(i);
 		chunks.push(new ShamirChunk(shared[i.toString()], i, parts));
